@@ -295,6 +295,22 @@ router.get("/getmyplayers/:id", (req, res) => {
 });
 
 
+router.get("/getotherteamplayers/:teamname", (req, res) => {
+    Team.findOne({
+        TeamName: req.params.teamname,
+    })
+        .sort("id")
+        .then((data) => {
+           // console.log(data);
+            res.send(data.Players)       // passing players from team model by assuming user only create one team in only one league
+        })
+        .catch((err) => {
+            res.status(404).send(err.message);
+        });
+});
+
+
+
 
 
 

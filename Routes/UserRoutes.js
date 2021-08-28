@@ -21,7 +21,7 @@ const storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         // cb(null, new Date().toISOString()+file.originalname)
-        console.log(file ,"filessssssssssssssss");
+        //console.log(file ,"filessssssssssssssss");
         cb(null, new mongoose.Types.ObjectId() + file.originalname);
     }
 });
@@ -36,7 +36,7 @@ const upload = multer({
 router.post(  
     "/registeruser", upload.single('image'),
     async(req, res) => {
-        console.log("8888888888",req.body.user);
+        // console.log("8888888888",req.body.user);
         let data = JSON.parse(req.body.user)
         let arr = {};
         console.log(req.body);
@@ -67,7 +67,7 @@ router.post(
                             newPerson
                                 .save()
                                 .then((ress) => { 
-                                    console.log("RESPONSE AFTER SAVING DATA INJ DB" , ress)
+                                    // console.log("RESPONSE AFTER SAVING DATA INJ DB" , ress)
                                     const payload = {
                                 
                                         id: ress._id,
@@ -80,13 +80,11 @@ router.post(
          
                                                     };
                                     jwt.sign(payload, 'mysecrettoken', (err, token) => {
-                                    if (token) {
-                                        
+                                    if (token) {                       
                                         arr.type = "User";
                                         arr.token = token;
-                                        console.log("before sending response jwt in backend",arr)
+                                        // console.log("before sending response jwt in backend",arr)
                                         return res.send(arr);
-
                                              }
                                 });
                             })
@@ -105,55 +103,56 @@ router.post(
 
 router.post("/sendemail/:token", async (req, res) => {
 console.log("nodemailer api from front end")
-let message = req.params.token;
-let token = jwt.decode(req.params.token);
-let email = token.email;
-	// create reusable transporter object using the default SMTP transport
-	try{let transporter = nodemailer.createTransport({
-		host: "smtp.gmail.com",
-		port: 465,
-		secure: true,
-		service: "gmail", // true for 465, false for other ports
+// let message = req.params.token;
+// let token = jwt.decode(req.params.token);
+// let email = token.email;
+// 	// create reusable transporter object using the default SMTP transport
+// 	try{let transporter = nodemailer.createTransport({
+// 		host: "smtp.gmail.com",
+// 		port: 465,
+// 		secure: true,
+// 		service: "gmail", // true for 465, false for other ports
 
-		ignoreTLS: false,
-		secure: false,
-		auth: {
-			user: "hassanahmedleo786@gmail.com", // generated ethereal user
-			pass: "hassangujjar@comsat", // generated ethereal password
-		},
-		tls: {
-			// do not fail on invalid certs
-			rejectUnauthorized: false,
-		},
-	});
+// 		ignoreTLS: false,
+// 		secure: false,
+// 		auth: {
+// 			user: "hassanahmedleo786@gmail.com", // generated ethereal user
+// 			pass: "hassangujjar@comsat", // generated ethereal password
+// 		},
+// 		tls: {
+// 			// do not fail on invalid certs
+// 			rejectUnauthorized: false,
+// 		},
+// 	});
 
-	const mesage = {
-		from: "hassanahmedleo786@gmail.com", // sender address
-		to: email, // list of receivers
-		subject: "art board email verification", // Subject line
-		html : ` <p><a href="http://localhost:3000/api/User/verify/${message}">Click here to verify</a></p> `, // plain text body
-	};
+// 	const mesage = {
+// 		from: "hassanahmedleo786@gmail.com", // sender address
+// 		to: email, // list of receivers
+// 		subject: "art board email verification", // Subject line
+// 		html : ` <p><a href="http://localhost:3000/api/User/verify/${message}">Click here to verify</a></p> `, // plain text body
+// 	};
 
-	// send mail with defined transport object
-	let info = await transporter.sendMail(mesage);
+// 	// send mail with defined transport object
+// 	let info = await transporter.sendMail(mesage);
 
-	console.log("Message sent: %s", info.messageId);
-	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+// 	console.log("Message sent: %s", info.messageId);
+// 	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
-	// Preview only available when sending through an Ethereal account
-	console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-	// Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-	res.send("Email Sent");}
-    catch(err){
-        console.log("IN CATCH--------------" , err)
-        res.send("error")
-    }
+// 	// Preview only available when sending through an Ethereal account
+// 	console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+// 	// Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+	res.send("Email Sent");
+// }
+    // catch(err){
+    //     console.log("IN CATCH--------------" , err)
+    //     res.send("error")
+    // }
 });
 
 
 router.put("/updatingteam/:id" , async(req,res)=> {
-    console.log(req.params.id," UsEr ROUTES In get my teams")
-    console.log(req.body.teamname," In get my teams")
+    // console.log(req.params.id," UsEr ROUTES In get my teams")
+    // console.log(req.body.teamname," In get my teams")
     let arr = {};
     let resp =await User.findByIdAndUpdate({_id:req.params.id},{
         Teamname:req.body.teamname
@@ -177,7 +176,7 @@ router.put("/updatingteam/:id" , async(req,res)=> {
 
                     arr.type = "User";
                     arr.token = token;
-                    console.log("before sending response jwt in backend",arr)
+                    // console.log("before sending response jwt in backend",arr)
                     return res.send(arr);
                          }
             });

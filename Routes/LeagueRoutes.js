@@ -216,14 +216,14 @@ router.put("/updatingNumberofTransactions/:leaguename/",async (req, res) => {
 router.post(
     "/createteam",
     async (req, res) => {
-        console.log("in create team...................." , req.body)
+        // console.log("in create team...................." , req.body)
         League.find({ LeagueName: req.body.leaguename })
             .then((data) => {
                 if (data.length != 0) {
-                    console.log("Data in create team", data)
+                    // console.log("Data in create team", data)
                     Team.find({ LeagueName: req.body.leaguename }).then((datat) => {
-                        console.log(datat.length, "datat.length==============.>")
-                        console.log(data[0].Numberofteams, "data.Numberofteams==============.>")
+                        // console.log(datat.length, "datat.length==============.>")
+                        // console.log(data[0].Numberofteams, "data.Numberofteams==============.>")
                         if (datat.length >= data[0].Numberofteams) {
                             res.send("League Already full")
                             return
@@ -238,10 +238,8 @@ router.post(
                             });
                             Team1.save().then(
                                 (res1) => {
-                                    console.log(res1, "response after adding league")
-                                    res.send("Team created Successfully")
+                                    // console.log(res1, "response after adding league")
                                 }).then(() => {
-
                                     User.findByIdAndUpdate(
                                         { _id: req.body.userid },
                                         {
@@ -250,11 +248,31 @@ router.post(
                                         }
                                     )
                                         .then((issue) => {
+                                            // console.log("data after team create" , issue);
                                             if (!issue) {
+                                                console.log("error issue");
                                                 return res.status(404).send("Issue Not Found");
                                             } else {
-
-                                                return res.status(200).json(issue);
+                                                 console.log("success res issue" , issue);
+                                                let arr = {};
+                                                jwt.sign({id: issue._id,
+                                                    username: issue.UserName,
+                                                    email: issue.Email,
+                                                    firstname: issue.FirstName,
+                                                    lastname: issue.LastName,
+                                                    leaguename: req.body.leaguename,
+                                                    teamname: req.body.teamname,
+                                                    isVerified: issue.isVerified,
+                                                    image: issue.image,
+                                                }, 'mysecrettoken', (err, token) => {
+                                                    if (token) {  
+                                                        arr.type = "User";
+                                                        arr.token = token;
+                                                        // console.log("before sending response jwt in backend",arr)
+                                                        return res.status(200).json({msg:"Team created Successfully" , arr:arr})
+                                                             }
+                                                });
+                                                // return res.status(200).json({msg:"Team created Successfully"})
                                             }
                                         })
                                         .catch((error) => {
@@ -329,6 +347,21 @@ router.get("/currentweek/:leaguename", (req, res) => {
         });
 });
 
+
+router.get("/currentweek/:leaguename", (req, res) => {
+    League.findOne({
+        LeagueName: req.params.leaguename,
+    })
+        .sort("id")
+        .then((data) => {
+            console.log(data.currentweek);
+            res.send(data)      
+        })
+        .catch((err) => {
+            console.log(err)
+            res.sendStatus(404)
+        });
+});
 
 
 
@@ -531,7 +564,7 @@ router.get("/getteamsfordrafting/:leaguename/:teamname", (req, res) => {
 
 
 router.get("/getleagueteams/:leaguename/:teamname", (req, res) => {
-    console.log("Leaguename in params2",req.params.leaguename)
+    // console.log("Leaguename in params2",req.params.leaguename)
     Team.find({ LeagueName: req.params.leaguename, TeamName: { $ne: req.params.teamname } }).then(
         (data) => {
             //console.log("get league teams",data)
@@ -539,7 +572,6 @@ router.get("/getleagueteams/:leaguename/:teamname", (req, res) => {
         }
     )
 })
-
 
 router.get("/getallteamsbyleague/:leaguename", (req, res) => {
     //console.log("Leaguename in params2",req.params.leaguename)
@@ -728,7 +760,7 @@ router.get("/getcommisioner/:id", (req, res) => {
 })
 
 router.get("/getmyteam/:id", (req, res) => {
-    console.log(req.params.id, " In get my teams")
+    // console.log(req.params.id, " In get my teams")
     Team.findOne({ UserID: req.params.id }).then((resp) => {
         if (resp) {
             res.send(resp)
@@ -743,7 +775,7 @@ router.get("/getmyteam/:id", (req, res) => {
 })
 
 router.get("/getmyleague/:leaguename", (req, res) => {
-    console.log(req.params.leaguename, " In get my teams")
+    // console.log(req.params.leaguename, " In get my teams")
     League.findOne({ LeagueName: req.params.leaguename }).then((resp) => {
         if (resp) {
             console.log(resp, "Response of getmyleague")
@@ -758,8 +790,8 @@ router.get("/getmyleague/:leaguename", (req, res) => {
 })
 
 router.put("/updatingteam/:id", (req, res) => {
-    console.log(req.params.id, " In get my teams")
-    console.log(req.body.teamname, " In get my teams")
+    // console.log(req.params.id, " In get my teams")
+    // console.log(req.body.teamname, " In get my teams")
     Team.findOneAndUpdate({ UserID: req.params.id }, {
         TeamName: req.body.teamname
     }).then((resp) => {

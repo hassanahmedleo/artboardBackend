@@ -63,7 +63,8 @@ io.on("connection", socket => {
           active: true,
           isPlayed:false,
         }
-      }else{
+      }
+      else{
         return {
           ...team,
           active:false,
@@ -78,21 +79,27 @@ io.on("connection", socket => {
 
       if(data.totalTeams==playedUser.length)
       {
-
         currentRound++; 
         let nextroundteam = data.teams.map((team, index)=> {return{...team, active:false,isPlayed:false}})
         io.emit("player added",{teams: nextroundteam,totalRounds,currentRound,totalTeams});
-
       }
       else
       {
-
         io.emit("player added",{teams: [...playedUser,...playingPlayer ],totalRounds,currentRound,totalTeams});
-
       }
-
       //console.log([...playedUser,...playingPlayer ])
   });
+
+
+  socket.on("Initialize_waiting_for_others" , (data) => {
+    // console.log(data , "Initialize_waiting_for_others");
+    io.emit("waiting_for_others","10");
+  }) 
+
+  socket.on("waiting_for_others" , (data) => {
+    // console.log(data , "waiting_for_others");
+    io.emit("waiting_for_others",data);
+  })
 
   socket.on("initialize", (data) => {
     //console.log("player added",data);
@@ -124,7 +131,7 @@ io.on("connection", socket => {
 
    io.emit("initializeDone",{teams,totalRounds,currentRound,totalTeams});
    io.emit("initializeDone1",{teams,totalRounds,currentRound,totalTeams});
-   console.log(".........................................................")
+  //  console.log(".........................................................")
   }); 
 })
 

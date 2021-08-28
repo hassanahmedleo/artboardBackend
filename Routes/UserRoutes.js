@@ -103,50 +103,50 @@ router.post(
 
 router.post("/sendemail/:token", async (req, res) => {
 console.log("nodemailer api from front end")
-// let message = req.params.token;
-// let token = jwt.decode(req.params.token);
-// let email = token.email;
-// 	// create reusable transporter object using the default SMTP transport
-// 	try{let transporter = nodemailer.createTransport({
-// 		host: "smtp.gmail.com",
-// 		port: 465,
-// 		secure: true,
-// 		service: "gmail", // true for 465, false for other ports
+let message = req.params.token;
+let token = jwt.decode(req.params.token);
+let email = token.email;
+	// create reusable transporter object using the default SMTP transport
+	try{let transporter = nodemailer.createTransport({
+		host: "smtp.gmail.com",
+		port: 465,
+		secure: true,
+		service: "gmail", // true for 465, false for other ports
 
-// 		ignoreTLS: false,
-// 		secure: false,
-// 		auth: {
-// 			user: "hassanahmedleo786@gmail.com", // generated ethereal user
-// 			pass: "hassangujjar@comsat", // generated ethereal password
-// 		},
-// 		tls: {
-// 			// do not fail on invalid certs
-// 			rejectUnauthorized: false,
-// 		},
-// 	});
+		ignoreTLS: false,
+		secure: false,
+		auth: {
+			user: "hassanahmedleo786@gmail.com", // generated ethereal user
+			pass: "hassangujjar@comsat", // generated ethereal password
+		},
+		tls: {
+			// do not fail on invalid certs
+			rejectUnauthorized: false,
+		},
+	});
 
-// 	const mesage = {
-// 		from: "hassanahmedleo786@gmail.com", // sender address
-// 		to: email, // list of receivers
-// 		subject: "art board email verification", // Subject line
-// 		html : ` <p><a href="http://localhost:3000/api/User/verify/${message}">Click here to verify</a></p> `, // plain text body
-// 	};
+	const mesage = {
+		from: "hassanahmedleo786@gmail.com", // sender address
+		to: email, // list of receivers
+		subject: "art board email verification", // Subject line
+		html : ` <p><a href="http://localhost:3000/api/User/verify/${message}">Click here to verify</a></p> `, // plain text body
+	};
 
-// 	// send mail with defined transport object
-// 	let info = await transporter.sendMail(mesage);
+	// send mail with defined transport object
+	let info = await transporter.sendMail(mesage);
 
-// 	console.log("Message sent: %s", info.messageId);
-// 	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+	console.log("Message sent: %s", info.messageId);
+	// Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
 
-// 	// Preview only available when sending through an Ethereal account
-// 	console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-// 	// Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+	// Preview only available when sending through an Ethereal account
+	console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+	// Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
 	res.send("Email Sent");
-// }
-    // catch(err){
-    //     console.log("IN CATCH--------------" , err)
-    //     res.send("error")
-    // }
+}
+    catch(err){
+        console.log("IN CATCH--------------" , err)
+        res.send("error")
+    }
 });
 
 

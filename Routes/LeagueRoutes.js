@@ -435,16 +435,16 @@ router.get("/testtoget", async (req, res) => {
 
 
 router.get("/getmyteam/:team/:league", async (req, res) => {
+    console.log(req.params , "in get my team");
     Team.findOne({ LeagueName: req.params.league, TeamName: req.params.team })
         .then((data1) => {
-           // console.log(data1, "found my team")
+            console.log(data1, "found my team")
             res.send(data1)
         }
-        )
+        ).catch((err)=> {
+            console.log(err , "in getmyteam");
+        })
 })
-
-
-
 
 router.put("/addingplayerinteam", async (req, res) => {
     //console.log("team and leaugue in api..............",req.body);

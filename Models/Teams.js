@@ -20,7 +20,7 @@ LeagueName: {
  TeamName: {
       type:String,
       required:true,
-      unique:true
+      unique:false
  },
 
   Transactionsinthisweek: {

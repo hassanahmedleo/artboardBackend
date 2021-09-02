@@ -127,12 +127,12 @@ router.post("/sendemail/:token", async (req, res) => {
         });
 
         // https://artboardbackend.herokuapp.com
-
+       
         const mesage = {
             from: "hassanahmedleo786@gmail.com", // sender address
             to: email, // list of receivers
             subject: "art board email verification", // Subject line
-            html: ` <p><a href="http://localhost:3000/api/User/verify/${message}">Click here to verify</a></p> `, // plain text body
+            html: ` <p><a href="https://artboardbackend.herokuapp.com/api/User/verify/${message}">Click here to verify</a></p> `, // plain text body
         };
 
         // send mail with defined transport object

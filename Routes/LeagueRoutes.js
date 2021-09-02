@@ -269,7 +269,7 @@ router.post(
                                                         arr.type = "User";
                                                         arr.token = token;
                                                         // console.log("before sending response jwt in backend",arr)
-                                                        return res.status(200).json({msg:"Team created Successfully" , arr:arr})
+                                                        return res.status(200).json({msg:"League Joined Successfully" , arr:arr})
                                                              }
                                                 });
                                                 // return res.status(200).json({msg:"Team created Successfully"})
@@ -745,6 +745,22 @@ router.get("/getLeaguescoreforTrading/:LeagueName", (req, res) => {
         }
     })
 })
+
+
+router.get("/getleagues/", (req, res) => {
+ 
+    League.find().then((res1) => {
+        if (res1) {
+            res.send(res1) 
+        }
+        else {
+            res.status(404).send("Not Found")
+        }
+    })
+})
+
+
+
 
 
 router.get("/getcommisioner/:id", (req, res) => {

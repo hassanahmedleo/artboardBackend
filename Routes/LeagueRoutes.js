@@ -216,7 +216,7 @@ router.put("/updatingNumberofTransactions/:leaguename/",async (req, res) => {
 router.post(
     "/createteam",
     async (req, res) => {
-        // console.log("in create team...................." , req.body)
+         console.log("in create team...................." , req.body)
         League.find({ LeagueName: req.body.leaguename })
             .then((data) => {
                 if (data.length != 0) {
@@ -587,7 +587,7 @@ router.get("/numberofteams/:leaguename", (req, res) => {
     //console.log("Leaguename in params2",req.params.leaguename)
     League.findOne({ LeagueName: req.params.leaguename }).then(
         (data) => {
-            console.log("get league teamsxdvxvxv",data)
+            //console.log("get league teamsxdvxvxv",data)
             res.json(data.Numberofteams)  
         }
     )

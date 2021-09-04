@@ -25,7 +25,6 @@ const mongoose = require("mongoose");
 
 io.on("connection", socket => {
     console.log("a user connected :D");
-
     socket.on("chat message", (msg) => {
       console.log("mess",msg.message);
       console.log("mess",msg.name);
@@ -37,7 +36,6 @@ io.on("connection", socket => {
     });
 
     socket.on("Players added", (data) => {
-
       //console.log("player added",data);
       let teams =data.teams.map((data, index)=>{
         if(data.active){
@@ -92,12 +90,12 @@ io.on("connection", socket => {
 
 
   socket.on("Initialize_waiting_for_others" , (data) => {
-     console.log(data , "Initialize_waiting_for_others");
-    io.emit("waiting_for_others","10");
+     //console.log(data , "Initialize_waiting_for_others");
+     io.emit("waiting_for_others","11");
   }) 
 
   socket.on("waiting_for_others" , (data) => {
-    // console.log(data , "waiting_for_others");
+     //console.log(data , "waiting_for_others");
     io.emit("waiting_for_others",data);
   })
 

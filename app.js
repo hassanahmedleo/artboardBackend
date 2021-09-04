@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 var app = express();
 const server = require("http").createServer(app);
-const io = require("socket.io")(server);
+const io = require("socket.io")(server, {cors: {origin: "*"}});
 var Chatroom = require("./Routes/Chatroom");
 var User = require("./Routes/UserRoutes");
 var League = require ("./Routes/LeagueRoutes")
@@ -92,7 +92,7 @@ io.on("connection", socket => {
 
 
   socket.on("Initialize_waiting_for_others" , (data) => {
-    // console.log(data , "Initialize_waiting_for_others");
+     console.log(data , "Initialize_waiting_for_others");
     io.emit("waiting_for_others","10");
   }) 
 

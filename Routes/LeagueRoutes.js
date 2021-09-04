@@ -253,7 +253,7 @@ router.post(
                                                 console.log("error issue");
                                                 return res.status(404).send("Issue Not Found");
                                             } else {
-                                                 console.log("success res issue" , issue);
+                                                // console.log("success res issue" , issue);
                                                 let arr = {};
                                                 jwt.sign({id: issue._id,
                                                     username: issue.UserName,
@@ -583,6 +583,16 @@ router.get("/getallteamsbyleague/:leaguename", (req, res) => {
     )
 })
 
+router.get("/numberofteams/:leaguename", (req, res) => {
+    //console.log("Leaguename in params2",req.params.leaguename)
+    League.findOne({ LeagueName: req.params.leaguename }).then(
+        (data) => {
+            console.log("get league teamsxdvxvxv",data)
+            res.json(data.Numberofteams)  
+        }
+    )
+})
+
 
 router.get("/getwinnersandlosersofleague/:leaguename", (req, res) => {
   
@@ -839,6 +849,30 @@ router.get("/gettradepropsalforcommisioner/:leaguename", (req, res) => {
 })
 
 
+router.get("/checkwhetherdrafted/:leaguename", (req, res) => {
+    console.log(req.params.leaguename)
+    Team.find({ LeagueName: req.params.leaguename}).then((resp) => {
+        if (resp) {
+            let isdrafted = false;
+            for(let check=0; check<resp.length; check++)
+            {
+                if(resp[check].Players.length>0)
+                {
+                    isdrafted = true
+                }
+            }
+           res.send(isdrafted)
+        }
+        else {
+           console.log("no data");
+        }
+    }).catch((err)=>{
+        console.log(err , "error");
+    })
+})
+
+
+
 router.post("/postingtraderequest",async (req, res) => {
    Traderequest.find({ LeagueName: req.body.leaguename, Teamnameto: req.body.teamnameto, PositionGroup: req.body.positiongroup }).then((data)=>
            {if (data.length > 0) {
@@ -914,7 +948,7 @@ router.get("/getmatchesofweek/:leaguename/:week" , async(req,res)=> {
 
 
 router.post("/savinghistory" , async(req,res)=> {
-    console.log(req.body , "savinghistory")
+    //console.log(req.body , "savinghistory")
     let history = new TransactionHistory({
         PositionGroup:req.body.PositionGroup,
         from:req.body.Teamnamefrom,
@@ -928,7 +962,7 @@ router.post("/savinghistory" , async(req,res)=> {
 })
 
 router.get("/gettinghistory/:leaguename" , async(req,res)=> {
-    console.log(req.body , "savinghistory")
+    //console.log(req.body , "savinghistory")
      TransactionHistory.find({LeagueName:req.params.leaguename}).then((histories)=>{
          console.log(histories);
         res.json(histories)

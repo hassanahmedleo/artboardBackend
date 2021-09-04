@@ -102,7 +102,7 @@ router.post(
 
 
 router.post("/sendemail/:token", async (req, res) => {
-    console.log("nodemailer api from front end")
+    console.log("nodemailer api from front end" , req.params.token)
     let message = req.params.token;
     let token = jwt.decode(req.params.token);
     let email = token.email;
@@ -126,13 +126,15 @@ router.post("/sendemail/:token", async (req, res) => {
             },
         });
 
-        // https://artboardbackend.herokuapp.com
+        // https://artboardbackend.herokuapp.com/api/User/verify/${message}
+
+        //http://localhost:3001/joinleague/${"test"}
        
         const mesage = {
             from: "hassanahmedleo786@gmail.com", // sender address
             to: email, // list of receivers
             subject: "art board email verification", // Subject line
-            html: ` <p><a href="https://artboardbackend.herokuapp.com/api/User/verify/${message}">Click here to verify</a></p> `, // plain text body
+            html: ` <p><a href="http://localhost:3000/api/User/verify/${message}">Click here to verifyssss</a></p> `, // plain text body
         };
 
         // send mail with defined transport object
@@ -265,7 +267,7 @@ router.post(
 
 async function verify(req, res) {
     if (!req.params.token) return res.status(400).json({ message: 'We were unable to find a user for this token.' });
-
+ 
     try {
         //const token = await Token.findOne({ token: req.params.token });
         // if (!token)
@@ -278,12 +280,15 @@ async function verify(req, res) {
 
         User.findByIdAndUpdate(data.id, { isVerified: true })
             .then((resp) => {
-                console.log("after verified", resp)
-                res.send("Email verified Log in to your account")
-            }
-            )
+                console.log("resp before redirecting",resp)
+                // res.send("Email verified Log in to your account")
+                res.redirect('http://localhost:3001/joinleague/' + req.params.token)
+            }).catch((err)=>{
+                return res.status(400).json({ message: 'We were unable to find a user for this token.' });
+            })
     } catch (error) {
-        res.status(500).json({ message: error.message, status: 'failed' });
+        console.log(error);
+          res.status(500).json({ message: error.message, status: 'failed' });
     }
 }
 

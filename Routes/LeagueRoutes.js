@@ -451,6 +451,7 @@ router.put("/addingplayerinteam", async (req, res) => {
     // console.log("Player position in adding teams",req.body.playerposition);
     // console.log("userid in adding teams",req.body.userid);
     // console.log("In adding leagues playerid..............",req.body.player.PlayerID)
+    console.log(req.body.leaguename , "monkey")
     AssignedPlayers.find({ LeagueName: req.body.leaguename, Playerid: req.body.player.PlayerID })
         .then((data) => {
             if (data.length == 0) {
@@ -487,14 +488,18 @@ router.put("/addingplayerinteam", async (req, res) => {
                                                             //return res.send({ msg: "players added confirm" })
                                                         }
                                                         ).catch((err)=> {
-                                                            console.log(err)
+                                                            console.log(err , "err1")
                                                         })
                                                 }
-                                            )
+                                            ).catch((err)=>{
+                                                console.log(err , "err2")
+                                            })
                                             return res.send("player added confirm");
                                         }
                                         // const token = jwt.sign({userid: User._id}, jwtkey);
                                         // res.send({token});
+                                    }).catch((err)=>{
+                                        console.log(err,"err3")
                                     })
                             }
                             catch (error) {
@@ -504,13 +509,19 @@ router.put("/addingplayerinteam", async (req, res) => {
                         else {
                             return res.status(200).send("Already drafted Players of this position group")
                         }
+                    }).catch((err)=>{
+                        console.log(err , "err4")
                     })
+
                 //res.send("Data is nujll")
             }
             else {
                 console.log("already")
                 return res.send("Already Drafted this position group")
             }
+        })
+        .catch((err)=> {
+            console.log(err , "err5")
         })
 })
 

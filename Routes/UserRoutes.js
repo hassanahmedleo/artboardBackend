@@ -272,7 +272,7 @@ async function verify(req, res) {
         //const token = await Token.findOne({ token: req.params.token });
         // if (!token)
         // 	return res.status(400).json({
-        // 		message: 'We were unable to find a valid token. Your token may have expired.',
+        // 		0message: 'We were unable to find a valid token. Your token may have expired.',
         // 	});
         console.log("token in verify function", req.params.token)
         const data = jwt.decode(req.params.token);
@@ -282,7 +282,8 @@ async function verify(req, res) {
             .then((resp) => {
                 console.log("resp before redirecting",resp)
                 // res.send("Email verified Log in to your account")
-                res.redirect('https://6134ab4adbacc729d9b365a6--artboard-st.netlify.app/joinleague/' + req.params.token)
+                // https://6134ab4adbacc729d9b365a6--artboard-st.netlify.app
+                res.redirect('https://6136027f988a02c390747069--artboard-st.netlify.app/joinleague/' + req.params.token)
             }).catch((err)=>{
                 return res.status(400).json({ message: 'We were unable to find a user for this token.' });
             })
@@ -307,9 +308,5 @@ router.post("savingteamkey", async (req, res) => {
     });
     key1.save().then(() => { console.log("saved key", req.body.key) })
 })
-
-
-
-
 
 module.exports = router

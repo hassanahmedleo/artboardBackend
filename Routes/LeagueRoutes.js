@@ -451,7 +451,7 @@ router.put("/addingplayerinteam", async (req, res) => {
     // console.log("Player position in adding teams",req.body.playerposition);
     // console.log("userid in adding teams",req.body.userid);
     // console.log("In adding leagues playerid..............",req.body.player.PlayerID)
-    console.log(req.body.leaguename , "monkey")
+    // console.log(req.body.leaguename , "monkey")
     AssignedPlayers.find({ LeagueName: req.body.leaguename, Playerid: req.body.player.PlayerID })
         .then((data) => {
             if (data.length == 0) {

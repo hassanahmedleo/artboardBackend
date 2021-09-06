@@ -484,9 +484,11 @@ router.put("/addingplayerinteam", async (req, res) => {
                                                         .then((data1) => {
                                                             //console.log(data1,"finding number of player per position")
                                                             //console.log(res1,"response after adding in assignPlayers")
-                                                            return res.send({ msg: "players added confirm" })
+                                                            //return res.send({ msg: "players added confirm" })
                                                         }
-                                                        )
+                                                        ).catch((err)=> {
+                                                            console.log(err)
+                                                        })
                                                 }
                                             )
                                             return res.send("player added confirm");

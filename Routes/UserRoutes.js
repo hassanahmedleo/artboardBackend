@@ -36,7 +36,7 @@ const upload = multer({
 router.post(
     "/registeruser", upload.single('image'),
     async (req, res) => {
-        // console.log("8888888888",req.body.user);
+         console.log(req.body , req.file , "data in register");
         let data = JSON.parse(req.body.user)
         let arr = {};
         console.log(req.body);

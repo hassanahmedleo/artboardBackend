@@ -62,11 +62,12 @@ router.get('/getassignedplayers/:leaguename' , async(req,res)=>{
 })
 
 router.put("/putwinnersofweek/:leaguename", async (req,res)=> {
-    console.log("In updating winmner",req.body.Losers)
+    //console.log("In updating winmner",req.body.Losers)
     const Data = League.findOneAndUpdate({LeagueName:req.params.leaguename},{
          $push:{ Winners: req.body.Winner ,  MatchupsScore: req.body.MatchupScore , Losers:req.body.Losers},
 
     }).then((res1)=>{
+        console.log("put winners of week")
         res.send(Data)
     })
     .catch((err)=>{
@@ -338,7 +339,7 @@ router.get("/currentweek/:leaguename", (req, res) => {
     })
         .sort("id")
         .then((data) => {
-            console.log(data.currentweek);
+            console.log(data.currentweek , "in getting current week");
             res.send(data)      
         })
         .catch((err) => {
@@ -348,20 +349,20 @@ router.get("/currentweek/:leaguename", (req, res) => {
 });
 
 
-router.get("/currentweek/:leaguename", (req, res) => {
-    League.findOne({
-        LeagueName: req.params.leaguename,
-    })
-        .sort("id")
-        .then((data) => {
-            console.log(data.currentweek);
-            res.send(data)      
-        })
-        .catch((err) => {
-            console.log(err)
-            res.sendStatus(404)
-        });
-});
+// router.get("/currentweek/:leaguename", (req, res) => {
+//     League.findOne({
+//         LeagueName: req.params.leaguename,
+//     })
+//         .sort("id")
+//         .then((data) => {
+//             console.log(data.currentweek);
+//             res.send(data)      
+//         })
+//         .catch((err) => {
+//             console.log(err)
+//             res.sendStatus(404)
+//         });
+// });
 
 
 
@@ -372,6 +373,7 @@ router.get("/getleagueSchedule/:leaguename", (req, res) => {
     })
         .sort("id")
         .then((data) => {
+            console.log("get league schedule success")
             res.send(data)      
         })
         .catch((err) => {

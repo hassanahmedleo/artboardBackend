@@ -20,6 +20,7 @@ const TransactionHistory = require("../Models/TransactionHistory")
 router.post(
     "/createleague",
     async (req, res) => {
+        let players =await Players.findOne().select({Players:1})
         let newLeague = new League({
             LeagueName: req.body.leaguename,
             Numberofteams: req.body.numberofteams,
@@ -29,10 +30,12 @@ router.post(
             MatchupsScore:[],
             RecentScores:[],
             Losers:[],
+            DraftPlayers:players.Players,
+            DraftAssist:[]
         });
         newLeague.save().then(
             (res1) => {
-                console.log(res1, "response after adding league")
+                console.log("response after adding league")
                 res.send(res1)
             })
             .catch((err) => {
@@ -42,19 +45,62 @@ router.post(
     }
 );
 
-router.get('/getplayers' , async(req,res)=>{
-    console.log("in get")
-    Players.findOne().select({
-        Players:1
+// router.get('/getplayers' , async(req,res)=>{
+//     console.log("in get")
+//     Players.findOne().select({
+//         Players:1
+//     }).then((re1)=>{
+//         res.send(re1)
+//     })
+//     //console.log(Data)
+// })
+
+
+
+router.get('/getleagueplayers/:leaguename' , async(req,res)=>{
+    console.log("in get getleagueplayers" , req.params.leaguename)
+    League.findOne({LeagueName:req.params.leaguename}).select({
+        DraftPlayers:1
     }).then((re1)=>{
+        console.log("re1 success") 
         res.send(re1)
+    }).catch((err)=> {
+        console.log(err)
     })
     //console.log(Data)
 })
 
+
+router.put("/updateDraftPlayers/:leaguename" , async(req,res)=>{
+    // console.log(req.body);
+    let arr = `DraftPlayers.${req.body.number}`
+    League.findOneAndUpdate( { LeagueName : req.params.leaguename } , { $pull : { [arr] : { PlayerID : req.body.playerid  }  } } )
+    .then((res1)=>{
+       // console.log("DELETED" , res)
+       res.send("success")
+    }).catch((err)=>{
+        console.log("ERROR" , err)
+    })
+})
+
+router.put("/updatingDraftAssist/:leaguename/:currentvalue" , async(req,res)=>{
+   // console.log(JSON.parse(req.params.currentvalue));
+   let updated = await League.findOneAndUpdate({LeagueName:req.params.leaguename} ,{DraftAssist:JSON.parse(req.params.currentvalue)})
+   //console.log(updated , "updatingDraftAssist")
+   res.send("true")
+  
+}) 
+
+router.get("/gettingDraftAssist/:leaguename" , async(req,res)=>{
+    let data = await League.findOne({LeagueName:req.params.leaguename}).select({DraftAssist:1})
+    console.log(data.DraftAssist)
+    res.json(data.DraftAssist)
+})
+
 router.get('/getassignedplayers/:leaguename' , async(req,res)=>{
-    //console.log("in get")
+    console.log("getassignedplayers1")
     AssignedPlayers.find({LeagueName:req.params.leaguename}).then((re1)=>{
+        console.log("getassignedplayers2")
         res.send(re1)
     }).catch((err)=>{
         console.log(err)
@@ -113,7 +159,7 @@ catch(error){
     //     console.log(err);
     // })
 })
-
+ 
 router.get("/getnumberofWeeks/:Leaguename" , async (req,res) =>{
     Schedule.findOne({LeagueName:req.params.Leaguename}).select({
         Schedule:1
@@ -218,7 +264,7 @@ router.post(
     "/createteam",
     async (req, res) => {
          console.log("in create team...................." , req.body)
-        League.find({ LeagueName: req.body.leaguename })
+        League.find({ LeagueName: req.body.leaguename }).select({Numberofteams:1})
             .then((data) => {
                 if (data.length != 0) {
                     // console.log("Data in create team", data)
@@ -239,8 +285,7 @@ router.post(
                             });
                             Team1.save().then(
                                 (res1) => {
-                                    // console.log(res1, "response after adding league")
-                                }).then(() => {
+                              
                                     User.findByIdAndUpdate(
                                         { _id: req.body.userid },
                                         {
@@ -406,7 +451,7 @@ router.get("/getlastmatchupinSchedule/:leaguename/:currentweek", (req, res) => {
     })
         .sort("id")
         .then((fullschedule) => {
-            console.log(fullschedule , "fullschedule")
+            console.log("fullschedule")
             res.send(fullschedule)
  
         })
@@ -424,7 +469,7 @@ router.get("/getlastmatchupinSchedule/:leaguename/:currentweek", (req, res) => {
 router.get("/testtoget", async (req, res) => {
     AssignedPlayers.find({ LeagueName: req.body.leaguename, Userid: { $ne: req.body.userid }, Playerposition: req.body.playerposition, TeamName: req.body.teamname })
         .then((data1) => {
-            console.log(data1, "finding number of player per position")
+            console.log("finding number of player per position")
             res.send(data1)
         }
         )
@@ -436,24 +481,20 @@ router.get("/testtoget", async (req, res) => {
 /////////////////////////
 
 
-router.get("/getmyteam/:team/:league", async (req, res) => {
-    console.log(req.params , "in get my team");
-    Team.findOne({ LeagueName: req.params.league, TeamName: req.params.team })
+router.get("/getmyteam/:team/:league", async(req, res) => {
+    console.log("in get my team" , req.params);
+    await Team.findOne({ LeagueName: req.params.league, TeamName: req.params.team })
         .then((data1) => {
-           // console.log(data1, "found my team")
-            res.send(data1)
+            console.log("found my team" , data1)
+            res.json(data1)
         }
         ).catch((err)=> {
             console.log(err , "in getmyteam");
-        })
+        }) 
 })
 
 router.put("/addingplayerinteam", async (req, res) => {
-    //console.log("team and leaugue in api..............",req.body);
-    // console.log("Player position in adding teams",req.body.playerposition);
-    // console.log("userid in adding teams",req.body.userid);
-    // console.log("In adding leagues playerid..............",req.body.player.PlayerID)
-    // console.log(req.body.leaguename , "monkey")
+    console.log(req.body.player.PlayerID)
     AssignedPlayers.find({ LeagueName: req.body.leaguename, Playerid: req.body.player.PlayerID })
         .then((data) => {
             if (data.length == 0) {
@@ -486,8 +527,8 @@ router.put("/addingplayerinteam", async (req, res) => {
                                                     AssignedPlayers.find({ LeagueName: req.body.leaguename, Userid: req.body.userid, Playerposition: req.body.playerposition, TeamName: req.body.teamname })
                                                         .then((data1) => {
                                                             //console.log(data1,"finding number of player per position")
-                                                            //console.log(res1,"response after adding in assignPlayers")
-                                                            //return res.send({ msg: "players added confirm" })
+                                                            console.log("players added confirm")
+                                                             res.send("players added confirm")
                                                         }
                                                         ).catch((err)=> {
                                                             console.log(err , "err1")
@@ -496,7 +537,7 @@ router.put("/addingplayerinteam", async (req, res) => {
                                             ).catch((err)=>{
                                                 console.log(err , "err2")
                                             })
-                                            return res.send("player added confirm");
+                                            //return res.send("player added confirm");
                                         }
                                         // const token = jwt.sign({userid: User._id}, jwtkey);
                                         // res.send({token});
@@ -509,6 +550,7 @@ router.put("/addingplayerinteam", async (req, res) => {
                             }
                         }
                         else {
+                            console.log("data1 else" , req.body.playerid)
                             return res.status(200).send("Already drafted Players of this position group")
                         }
                     }).catch((err)=>{
@@ -533,7 +575,7 @@ router.get("/getteams/:leaguename/:teamname", (req, res) => {
     //console.log("Leaguename in params1",req.params.leaguename)
     Team.find({ LeagueName: req.params.leaguename, TeamName: { $ne: req.params.teamname } }).then(
         (data) => {
-            console.log(data)
+            console.log("in get teams")
             res.send(data)
         }
     )
@@ -544,7 +586,7 @@ router.get("/getteamsforscore/:leaguename", (req, res) => {
     //console.log("Leaguename in params1",req.params.leaguename)
     Team.find({ LeagueName: req.params.leaguename }).then(
         (data) => {
-            console.log(data)
+            console.log("getteamsforscore1")
             res.send(data)
         }
     )
@@ -559,7 +601,7 @@ router.get("/getteamsforscore1/:leaguename", (req, res) => {
         TeamName:1
     }).then(
         (data) => {
-            console.log(data)
+            console.log("getteamsforscore2")
             res.send(data)
         }
     )
@@ -570,7 +612,7 @@ router.get("/getteamsforscore1/:leaguename", (req, res) => {
 router.get("/getteamsfordrafting/:leaguename/:teamname", (req, res) => {
     Team.find({ LeagueName: req.params.leaguename }).then(
         (data) => {
-            console.log(data)
+            console.log("getteamsfordrafting")
             res.send(data)
         }
     )
@@ -600,9 +642,9 @@ router.get("/getallteamsbyleague/:leaguename", (req, res) => {
 
 router.get("/numberofteams/:leaguename", (req, res) => {
     //console.log("Leaguename in params2",req.params.leaguename)
-    League.findOne({ LeagueName: req.params.leaguename }).then(
+    League.findOne({ LeagueName: req.params.leaguename }).select({Numberofteams:1}).then(
         (data) => {
-            //console.log("get league teamsxdvxvxv",data)
+            console.log("get league teamsxdvxvxv",data.Numberofteams)
             res.json(data.Numberofteams)  
         }
     )
@@ -629,7 +671,9 @@ router.post("/savingscore" , (req,res) => {
         ScoreForTrading:req.body.ScoresForTrading
                     }) 
      score.save().then((res)=>{
-         console.log(res)
+         console.log("save score")
+        }).catch((err)=>{
+            console.log(err)
         })
 })
 
@@ -650,7 +694,9 @@ router.post("/savingsPlayersArray" , (req,res) => {
     let Player = new Players({ Players:req.body.Players }) 
      Player.save().then((res1)=>
      {
-         console.log(res1)
+         console.log("savingsPlayersArray1")
+     }).catch((err)=>{
+         console.log(err);
      })
 })
 
@@ -773,9 +819,10 @@ router.get("/getLeaguescoreforTrading/:LeagueName", (req, res) => {
 
 
 router.get("/getleagues/", (req, res) => {
- 
-    League.find().then((res1) => {
+ console.log("getleague")
+    League.find().select({LeagueName:1}).then((res1) => {
         if (res1) {
+            console.log("getleagues12")
             res.send(res1) 
         }
         else {
@@ -790,7 +837,7 @@ router.get("/getleagues/", (req, res) => {
 
 router.get("/getcommisioner/:id", (req, res) => {
     console.log(req.params.id)
-    League.findOne({ managerid: req.params.id }).then((resp) => {
+    League.findOne({ managerid: req.params.id }).select({managerid:1}).then((resp) => {
         if (resp) {
             res.send("true")
         }
@@ -819,7 +866,7 @@ router.get("/getmyleague/:leaguename", (req, res) => {
     // console.log(req.params.leaguename, " In get my teams")
     League.findOne({ LeagueName: req.params.leaguename }).then((resp) => {
         if (resp) {
-            console.log(resp, "Response of getmyleague")
+            console.log("Response of getmyleague")
             res.send(resp)
         }
         else {
@@ -852,7 +899,7 @@ router.put("/updatingteam/:id", (req, res) => {
 
 
 router.get("/gettradepropsalforcommisioner/:leaguename", (req, res) => {
-    console.log(req.params.leaguename)
+    console.log(req.params.leaguename , "get commisioner")
     Traderequest.find({ LeagueName: req.params.leaguename, UserVerification: true }).then((resp) => {
         if (resp) {
             res.send(resp)
@@ -865,17 +912,15 @@ router.get("/gettradepropsalforcommisioner/:leaguename", (req, res) => {
 
 
 router.get("/checkwhetherdrafted/:leaguename", (req, res) => {
-    console.log(req.params.leaguename)
+    console.log(req.params.leaguename , "check drafted")
     Team.find({ LeagueName: req.params.leaguename}).then((resp) => {
         if (resp) {
             let isdrafted = false;
-            for(let check=0; check<resp.length; check++)
-            {
-                if(resp[check].Players.length>0)
+                if(resp[0].Players.length>0)
                 {
                     isdrafted = true
                 }
-            }
+                console.log(req.params.leaguename , "check drafted2")
            res.send(isdrafted)
         }
         else {
@@ -979,7 +1024,7 @@ router.post("/savinghistory" , async(req,res)=> {
 router.get("/gettinghistory/:leaguename" , async(req,res)=> {
     //console.log(req.body , "savinghistory")
      TransactionHistory.find({LeagueName:req.params.leaguename}).then((histories)=>{
-         console.log(histories);
+         console.log("histories");
         res.json(histories)
      })
 })

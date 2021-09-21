@@ -39,6 +39,14 @@ MatchupsScore:{
 Losers:{
     type:Array,
     required:true
+},
+DraftAssist:{
+    type:Array,
+    required:true
+},
+DraftPlayers:{
+    type:Array,
+    required:true
 }
 
 })

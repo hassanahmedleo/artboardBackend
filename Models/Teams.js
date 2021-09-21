@@ -20,14 +20,13 @@ LeagueName: {
  TeamName: {
       type:String,
       required:true,
-      unique:false
+      unique:true
  },
 
   Transactionsinthisweek: {
     type:Number,
     required:true,
 },
-
  }
 )
 

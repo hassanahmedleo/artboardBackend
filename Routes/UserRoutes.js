@@ -134,7 +134,7 @@ router.post("/sendemail/:token", async (req, res) => {
             from: "hassanahmedleo786@gmail.com", // sender address
             to: email, // list of receivers
             subject: "art board email verification", // Subject line
-            html: ` <p><a href="http://localhost:3000/api/User/verify/${message}">Click here to verify</a></p> `, // plain text body
+            html: ` <p><a href="https://artboardbackend.herokuapp.com/api/User/verify/${message}">Click here to verify</a></p> `, // plain text body
         };
 
         // send mail with defined transport object
@@ -283,8 +283,8 @@ async function verify(req, res) {
             .then((resp) => {
                 console.log("resp before redirecting",resp)
                 // res.send("Email verified Log in to your account")
-                // https://613770338a16cb95e9b216f3--artboard-st.netlify.app
-                res.redirect('http://localhost:3001/joinleague/' + req.params.token)
+                // https://614cba9d44278c12f65088df--artboard-st.netlify.app
+                res.redirect('https://614cba9d44278c12f65088df--artboard-st.netlify.app/joinleague/' + req.params.token)
             }).catch((err)=>{
                 return res.status(400).json({ message: 'We were unable to find a user for this token.' });
             })

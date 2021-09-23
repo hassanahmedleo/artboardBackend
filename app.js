@@ -37,7 +37,7 @@ io.on("connection", socket => {
 
     socket.on("Players added", (data) => {
       //console.log("player added",data);
-      let teams =data.teams.map((data, index)=>{
+      let teams =data && data.teams.map((data, index)=>{
         if(data.active){
           return {
             ...data,

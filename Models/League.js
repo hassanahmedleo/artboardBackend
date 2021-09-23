@@ -44,11 +44,10 @@ DraftAssist:{
     type:Array,
     required:true
 },
-DraftPlayers:{
-    type:Array,
+DraftCompleted:{
+    type:Boolean,
     required:true
 }
-
 })
 
 module.exports = mongoose.model("League", League);

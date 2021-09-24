@@ -99,6 +99,11 @@ io.on("connection", socket => {
     io.emit("waiting_for_others",data);
   })
 
+  socket.on("get_recent_picks" , (data) => {
+    console.log(data , "get_recent_picks");
+   io.emit("get_recent_picks",data);
+ })
+
   socket.on("initialize", (data) => {
     //console.log("player added",data);
     //console.log("mess of player added1",data.teams);

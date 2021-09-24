@@ -16,6 +16,7 @@ const { response } = require("express");
 const Teams = require("../Models/Teams");
 const Players = require("../Models/Players")
 const TransactionHistory = require("../Models/TransactionHistory")
+const RecentPicks = require("../Models/RecentPick")
 
 router.post(
     "/createleague",
@@ -545,8 +546,35 @@ router.get("/getmyteam/:team/:league", async (req, res) => {
         })
 })
 
+router.put("/recentpickadd",async(req,res)=>{
+    console.log(req.body,"recentpickadd")
+   RecentPicks.findOne({LeagueName:req.body.leaguename}).then((RecentPickresponse)=>{
+       if(RecentPickresponse)
+       {
+        RecentPicks.findOneAndUpdate({LeagueName:req.body.leaguename},{Players:req.body.players}).then((res1)=>{
+            console.log("successfullyupdated RecentPicks")
+            res.send("successfullyupdated RecentPicks")
+        }).catch((err)=>{
+            console.log(err,"559")
+        })
+       }
+       else{
+        let newRecentPick =new RecentPicks({
+            LeagueName:req.body.leaguename,
+            Players:req.body.players
+        })
+        newRecentPick.save().then((res2)=>{
+            console.log("successfullycreated RecentPicks")
+            res.send("successfullycreated RecentPicks")
+        }).catch((err)=>{
+            console.log(err,"571")
+        })
+       }
+   })
+})
+
 router.put("/addingplayerinteam", async (req, res) => {
-    console.log(req.body.player.PlayerID)
+    console.log(req.body.player.FirstName)
     AssignedPlayers.find({ LeagueName: req.body.leaguename, Playerid: req.body.player.PlayerID })
         .then((data) => {
             if (data.length == 0) {
@@ -574,17 +602,18 @@ router.put("/addingplayerinteam", async (req, res) => {
                                                 TeamName: req.body.teamname,
                                                 Playerteamname: req.body.playerteamname
                                             });
-                                            newAssign.save().then(
-                                                (res1) => {
-                                                    AssignedPlayers.find({ LeagueName: req.body.leaguename, Userid: req.body.userid, Playerposition: req.body.playerposition, TeamName: req.body.teamname })
-                                                        .then((data1) => {
-                                                            //console.log(data1,"finding number of player per position")
-                                                            console.log("players added confirm")
+                                            newAssign.save().then((res1) => {
+                                                
+                                                //     AssignedPlayers.find({ LeagueName: req.body.leaguename, Userid: req.body.userid, Playerposition: req.body.playerposition, TeamName: req.body.teamname })
+                                                //         .then((data1) => {
+                                                //             //console.log(data1,"finding number of player per position")
+                                                //             console.log("players added confirm")
+
                                                             res.send("players added confirm")
-                                                        }
-                                                        ).catch((err) => {
-                                                            console.log(err, "err1")
-                                                        })
+                                                //         }
+                                                //         ).catch((err) => {
+                                                //             console.log(err, "err1")
+                                                //         })
                                                 }
                                             ).catch((err) => {
                                                 console.log(err, "err2")
@@ -700,6 +729,15 @@ router.get("/numberofteams/:leaguename", (req, res) => {
             res.json(data.Numberofteams)
         }
     )
+})
+
+router.get("/getrecentpicks/:leaguename" , (req,res)=>{
+    RecentPicks.findOne({LeagueName:req.params.leaguename}).select({Players:1}).then((res1)=>{
+        res.send(res1.Players)
+    })
+    .catch((err)=>{
+        console.log(err , "739")
+    })
 })
 
 

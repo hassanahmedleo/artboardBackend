@@ -737,6 +737,7 @@ router.get("/getrecentpicks/:leaguename" , (req,res)=>{
     })
     .catch((err)=>{
         console.log(err , "739")
+        res.send("err")
     })
 })
 

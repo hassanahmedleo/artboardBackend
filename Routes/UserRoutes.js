@@ -127,6 +127,7 @@ router.post("/sendemail/:token", async (req, res) => {
         });
 
         // https://artboardbackend.herokuapp.com/api/User/verify/${message}
+        //http://localhost:3000
 
        
        
@@ -284,8 +285,9 @@ async function verify(req, res) {
                 console.log("resp before redirecting",resp)
                 // res.send("Email verified Log in to your account")
                 // https://614de5971cy.com/sites/ar8edc2bfe8b41d1--artboard-st.netlify.ab41d1pp
-                https://614de5971cy.com/sites/ar8edc2bfe8b41d1--artboard-st.netlify.ab41d1pp
-                res.redirect('https://614de5971c8edc2bfe8b41d1--artboard-st.netlify.app/joinleague/' + req.params.token)
+                // https://614de5971cy.com/sites/ar8edc2bfe8b41d1--artboard-st.netlify.ab41d1pp
+
+                res.redirect('https://614ef2ef8b8ed4d850ae3295--artboard-st.netlify.app/joinleague/' + req.params.token)
             }).catch((err)=>{
                 return res.status(400).json({ message: 'We were unable to find a user for this token.' });
             })

@@ -296,6 +296,47 @@ router.get("/getrecentscores/:leaguename", async (req, res) => {
         })
 })
 
+
+router.get("/getallscores/:leaguename", async (req, res) => {
+    League.findOne({ LeagueName: req.params.leaguename }).select({
+        MatchupsScore: 1
+    })
+        .then((data) => {
+            // console.log( "IN get scores", data)
+            res.status(200).send(data)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+})
+
+
+router.get("/getalllosers/:leaguename", async (req, res) => {
+    League.findOne({ LeagueName: req.params.leaguename }).select({
+        Losers: 1
+    })
+        .then((data) => {
+            res.status(200).send(data)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+})
+
+router.get("/getallWinners/:leaguename", async (req, res) => {
+    League.findOne({ LeagueName: req.params.leaguename }).select({
+        Winners: 1
+    })
+        .then((data) => {
+            res.status(200).send(data)
+        })
+        .catch((err) => {
+            console.log(err)
+        })
+})
+
+
+
 router.put("/updatingNumberofTransactions/:leaguename/", async (req, res) => {
     console.log("before find", req.params.leaguename)
     await Team.find({ LeagueName: req.params.leaguename }).then(async (teams) => {

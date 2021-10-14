@@ -16,12 +16,9 @@ app.use("/api/User" , User);
 app.use("/api/League" , League);
 app.use('/Images', express.static('Images'));
 
-
 const mongoose = require("mongoose");
 
 //Server Config
-
-
 
 io.on("connection", socket => {
     console.log("a user connected :D");

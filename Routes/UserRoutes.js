@@ -284,11 +284,9 @@ async function verify(req, res) {
             .then((resp) => {
                 console.log("resp before redirecting",resp)
                 // res.send("Email verified Log in to your account")
-                // https://614de5971cy.com/sites/ar8edc2bfe8b41d1--artboard-st.netlify.ab41d1pp
-                // https://614ef2ef8b8ed4d850ae3295--artboard-st.netlify.app
-
-                //https://61683434c40c3a08b443923f--artboard-st.netlify.app
-                res.redirect('https://61683434c40c3a08b443923f--artboard-st.netlify.app/joinleague/' + req.params.token)
+                //https://616fe0357338c4115c64be4b--artboard-st.netlify.app
+               res.redirect('https://616fe0357338c4115c64be4b--artboard-st.netlify.app/joinleague/' + req.params.token)
+              //  res.redirect('http://localhost:3001/joinleague/' + req.params.token)
             }).catch((err)=>{
                 return res.status(400).json({ message: 'We were unable to find a user for this token.' });
             })

@@ -592,17 +592,24 @@ router.put("/recentpickadd",async(req,res)=>{
    RecentPicks.findOne({LeagueName:req.body.leaguename}).then((RecentPickresponse)=>{
        if(RecentPickresponse)
        {
-        RecentPicks.findOneAndUpdate({LeagueName:req.body.leaguename},{Players:req.body.players}).then((res1)=>{
+        RecentPicks.findOneAndUpdate({LeagueName:req.body.leaguename},{
+            $push: {
+                "Players": {
+                    players:req.body.players
+                }
+            }
+          }).then((res1)=>{
             console.log("successfullyupdated RecentPicks")
             res.send("successfullyupdated RecentPicks")
         }).catch((err)=>{
             console.log(err,"559")
         })
        }
-       else{
+       else
+       {
         let newRecentPick =new RecentPicks({
             LeagueName:req.body.leaguename,
-            Players:req.body.players
+            Players:[{players:req.body.players}]
         })
         newRecentPick.save().then((res2)=>{
             console.log("successfullycreated RecentPicks")

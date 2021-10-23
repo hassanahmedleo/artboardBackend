@@ -117,8 +117,8 @@ router.post("/sendemail/:token", async (req, res) => {
             ignoreTLS: false,
             secure: false,
             auth: {
-                user: "hassanahmedleo786@gmail.com", // generated ethereal user
-                pass: "hassangujjar@comsat", // generated ethereal password
+                user: "powerfiveplus@gmail.com", // generated ethereal user
+                pass: "PowerFivePlus", // generated ethereal password
             },
             tls: {
                 // do not fail on invalid certs
@@ -132,7 +132,7 @@ router.post("/sendemail/:token", async (req, res) => {
        
        
         const mesage = {
-            from: "hassanahmedleo786@gmail.com", // sender address
+            from: "powerfiveplus@gmail.com", // sender address
             to: email, // list of receivers
             subject: "art board email verification", // Subject line
             html: `<p><a href="https://artboardbackend.herokuapp.com/api/User/verify/${message}">Click here to verify</a></p>`, // plain text body
@@ -155,6 +155,41 @@ router.post("/sendemail/:token", async (req, res) => {
     }
 });
 
+
+
+router.post("/resendEmailVerification" , async(req,res)=> {
+    console.log(req.body)
+    User.findOne({Email:req.body.email}).then((user)=>{
+        if(!user)
+        {
+            res.status(400).send({msg:"User not found"})
+        }
+        else if(user.isVerified){
+            res.status(200).send({msg:"Already verified"})
+        }
+        else{
+            console.log(user)
+            let arr = {}
+            const payload = {
+                id: user._id,
+                username: user.UserName,
+                email: user.Email,
+                firstname: user.FirstName,
+                lastname: user.LastName,
+                leaguename: user.Leaguename,
+                teamname: user.Teamname
+            };
+            jwt.sign(payload, 'mysecrettoken', (err, token) => {
+                if (token) {
+                    arr.type = "User";
+                    arr.token = token;
+                    return res.send(arr);
+                }
+            });
+        }
+        console.log(user,"user")
+    })
+})
 
 router.put("/updatingteam/:id", async (req, res) => {
     // console.log(req.params.id," UsEr ROUTES In get my teams")
@@ -285,13 +320,14 @@ async function verify(req, res) {
                 console.log("resp before redirecting",resp)
                 // res.send("Email verified Log in to your account")
                 //https://616fe0357338c4115c64be4b--artboard-st.netlify.app
-               res.redirect('https://616fe0357338c4115c64be4b--artboard-st.netlify.app/joinleague/' + req.params.token)
-              //  res.redirect('http://localhost:3001/joinleague/' + req.params.token)
+                
+              // res.redirect('https://616fe0357338c4115c64be4b--artboard-st.netlify.app/joinleague/' + req.params.token)
+               res.redirect('http://localhost:3001/joinleague/' + req.params.token)
             }).catch((err)=>{
                 return res.status(400).json({ message: 'We were unable to find a user for this token.' });
             })
     } catch (error) {
-        console.log(error);
+        console.log(error);s
           res.status(500).json({ message: error.message, status: 'failed' });
     }
 }

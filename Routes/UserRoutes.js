@@ -318,11 +318,7 @@ async function verify(req, res) {
         User.findByIdAndUpdate(data.id, { isVerified: true })
             .then((resp) => {
                 console.log("resp before redirecting",resp)
-                // res.send("Email verified Log in to your account")
-                //https://616fe0357338c4115c64be4b--artboard-st.netlify.app
-                
-              // res.redirect('https://616fe0357338c4115c64be4b--artboard-st.netlify.app/joinleague/' + req.params.token)
-               res.redirect('http://localhost:3001/joinleague/' + req.params.token)
+               res.redirect('https://6173eda8c0a89f6031e4c485--artboard-st.netlify.app/joinleague/' + req.params.token)
             }).catch((err)=>{
                 return res.status(400).json({ message: 'We were unable to find a user for this token.' });
             })

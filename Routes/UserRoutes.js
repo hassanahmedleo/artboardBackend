@@ -117,8 +117,10 @@ router.post("/sendemail/:token", async (req, res) => {
             ignoreTLS: false,
             secure: false,
             auth: {
-                user: "powerfiveplus@gmail.com", // generated ethereal user
-                pass: "PowerFivePlus", // generated ethereal password
+                // user: "powerfiveplus@gmail.com", // generated ethereal user
+                // pass: "PowerFivePlus", // generated ethereal password
+                user: 'softthrivetest@gmail.com',
+		        pass: 'strong12345678',
             },
             tls: {
                 // do not fail on invalid certs
@@ -132,10 +134,10 @@ router.post("/sendemail/:token", async (req, res) => {
        
        
         const mesage = {
-            from: "powerfiveplus@gmail.com", // sender address
+            from: "softthrivetest@gmail.com", // sender address
             to: email, // list of receivers
             subject: "art board email verification", // Subject line
-            html: `<p><a href="https://artboardbackend.herokuapp.com/api/User/verify/${message}">Click here to verify</a></p>`, // plain text body
+            html: `<p><a href="https://art-board1.herokuapp.com/api/User/verify/${message}">Click here to verify</a></p>`, // plain text body
         };
 
         // send mail with defined transport object
@@ -314,11 +316,11 @@ async function verify(req, res) {
         console.log("token in verify function", req.params.token)
         const data = jwt.decode(req.params.token);
         console.log("after decode", data.id)
-
+//"https://6173eda8c0a89f6031e4c485--artboard-st.netlify.app/"
         User.findByIdAndUpdate(data.id, { isVerified: true })
             .then((resp) => {
                 console.log("resp before redirecting",resp)
-               res.redirect('https://6173eda8c0a89f6031e4c485--artboard-st.netlify.app/joinleague/' + req.params.token)
+               res.redirect('https://artboardb.netlify.app/joinleague/' + req.params.token)
             }).catch((err)=>{
                 return res.status(400).json({ message: 'We were unable to find a user for this token.' });
             })
